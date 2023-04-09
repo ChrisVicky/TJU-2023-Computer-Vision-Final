@@ -1,5 +1,5 @@
 from downloader import download
-from video2flo import video2flo, check_path
+from video2flo import Video2flo, check_path
 import os
 
 
@@ -8,4 +8,4 @@ Path = "./download"
 check_path(Path)
 title = download(url, False, 10, path=Path)
 print("New file: ", title)
-video2flo(url, 0, os.path.join(Path, title))
+Video2flo(url, 0, os.path.join(Path, title))
