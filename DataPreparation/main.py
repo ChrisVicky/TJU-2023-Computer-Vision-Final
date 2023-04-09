@@ -7,4 +7,4 @@ Path = "./download"
 check_path(Path)
 title = download(url, False, 10, path=Path)
 print("New file: ", title)
-video2flo(url, 0)
+video2flo(url, 0, title)
