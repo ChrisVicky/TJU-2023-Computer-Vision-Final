@@ -7,7 +7,7 @@ Path = "./download"
 check_path(Path)
 
 url = [
-        "https://www.bilibili.com/video/BV1i441187Vj",  # 藤原书记
+        # "https://www.bilibili.com/video/BV1i441187Vj",  # 藤原书记
         "https://www.bilibili.com/video/BV1ct4y1n7t9"   # 蔡徐坤
         ]
 vid = 0
