@@ -6,8 +6,8 @@ import os
 url = "https://www.bilibili.com/video/BV1et411t7Cm"
 Path = "./download"
 check_path(Path)
-title = "test.mp4"
-title = os.path.join(Path, title)
-download(url, False, 10, name=title)
+title = "test"
+download(url, False, 10, name=os.path.join(Path, title))
+title += ".mp4"
 print("New file: ", title)
 Video2flo(url, 0, os.path.join(Path, title))
