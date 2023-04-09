@@ -98,7 +98,7 @@ def Video2flo(url: str, vid: int, video: str = Video):
         if cnt % Mode == 0:
             imgs.append(cropimg(img))
             cnt_i += 1
-        if cnt_i % DN == 0 and len(img) > 0:
+        if cnt_i % DN == 0 and len(imgs) > 0:
             data["video_id"] = str(vid)
             vid += 1
             data["imgs"] = imgs
