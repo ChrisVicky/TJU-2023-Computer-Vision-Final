@@ -35,4 +35,5 @@ def download(url: str, playlist: bool = False, threads: int = 10, proxy: bool = 
         proxy_setup()
 
     cmd = ' '.join(cmd)
+    print(cmd)
     os.system(cmd)
