@@ -72,7 +72,7 @@ def imgs2flo(datas: []):
             p = os.path.join(base, "target")
             check_path(p)
             cv2.imwrite(os.path.join(p, f"{i:04d}.jpg"), img1)
-        cv2.imwrite(p, imgs[-1])
+        cv2.imwrite(os.path.join(p, f"{i+1:04d}.jpg"), imgs[-1])
 
 
 def Video2flo(url: str, vid: int, video: str = Video):
