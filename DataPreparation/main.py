@@ -12,8 +12,8 @@ url = [
         ]
 vid = 0
 for u in url:
-    title = "test"
-    download(url, False, 10, path=Path, name=title)
+    title = u[u.rfind("/")+1:]
+    download(u, False, 10, path=Path, name=title)
     title += ".mp4"
     print("New file: ", title)
     vid = Video2flo(url, vid, os.path.join(Path, title))
