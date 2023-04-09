@@ -84,19 +84,21 @@ def Video2flo(url: str, vid: int, video: str = Video):
     datas = []
     data = {}
     cnt = 0
+    cnt_i = 0
     while (cap.isOpened()):
         flag, img = cap.read()
         if not flag:
             break
         if cnt % Mode == 0:
             imgs.append(img)
-        if cnt % DN == (DN - 1):
+            cnt_i += 1
+        if cnt_i % DN == (DN - 1):
             data["video_id"] = str(vid)
             vid += 1
             data["imgs"] = imgs
             imgs = []
             data["source"] = url
-            data["start_frame"] = cnt - DN + 1
+            data["start_frame"] = cnt_i - DN + 1
             datas.append(data)
             data = {}
         cnt += 1
