@@ -99,4 +99,6 @@ def Video2flo(url: str, vid: int, video: str = Video):
             data = {}
         cnt += 1
     cap.release()
+
+    imgs2flo(datas)
     return vid
