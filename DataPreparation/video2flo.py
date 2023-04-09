@@ -93,7 +93,10 @@ def cropimg(img):
 
 
 def Video2flo(url: str, vid: int, video: str = Video):
-    print(f"Current Video: {video}")
+    global Base
+    numbs = [int(i) for i in os.listdir(Base)]
+    vid = max(numbs) + 1
+    print(f"Current Video: {video}, started with {vid}")
     cap = cv2.VideoCapture(video)
     assert cap.isOpened()
     # fps = cap.get(cv2.CAP_PROP_FPS)
