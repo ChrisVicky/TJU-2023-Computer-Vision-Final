@@ -6,6 +6,7 @@ from tqdm import tqdm
 import numpy as np
 import json
 import torch
+from loguru import logger
 
 
 #  mim download mmflow --config raft_8x2_100k_mixed_368x768 --dest ./checkpoints
@@ -40,7 +41,7 @@ def flow2rgb2(flow: np.ndarray) -> np.ndarray:
 
 def imgs2flo(datas: []):
     global Model
-    for data in datas:
+    for data in tqdm(datas):
         base = os.path.join(Base, data["video_id"])
         check_path(base)
 
@@ -63,17 +64,21 @@ def imgs2flo(datas: []):
 
             p = os.path.join(base, "flow_rgb")
             check_path(p)
-            cv2.imwrite(os.path.join(p, f"{i:04d}.jpg"), flow2rgb2(result))
+            cv2.imwrite(os.path.join(p, f"{i}.jpg"), flow2rgb2(result))
 
             p = os.path.join(base, "flow")
             check_path(p)
-            write_flow(result, os.path.join(p, f"{i:04d}.flo"))
+            write_flow(result, os.path.join(p, f"{i}.flo"))
 
             p = os.path.join(base, "target")
             check_path(p)
-            cv2.imwrite(os.path.join(p, f"{i:04d}.jpg"), img1)
+            cv2.imwrite(os.path.join(p, f"{i}.jpg"), img1)
             if i == len(imgs) - 2:
-                cv2.imwrite(os.path.join(p, f"{i+1:04d}.jpg"), img2)
+                cv2.imwrite(os.path.join(p, f"{i+1}.jpg"), img2)
+
+
+def cropimg(img):
+    return cv2.resize(img, (512, 512))
 
 
 def Video2flo(url: str, vid: int, video: str = Video):
@@ -91,9 +96,9 @@ def Video2flo(url: str, vid: int, video: str = Video):
         if not flag:
             break
         if cnt % Mode == 0:
-            imgs.append(img)
+            imgs.append(cropimg(img))
             cnt_i += 1
-        if cnt_i % DN == 0:
+        if cnt_i % DN == 0 and len(img) > 0:
             data["video_id"] = str(vid)
             vid += 1
             data["imgs"] = imgs
