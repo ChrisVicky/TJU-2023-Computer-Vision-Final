@@ -24,7 +24,11 @@ def download(url: str, playlist: bool = False, threads: int = 10):
     proxy_setup()
 
     com = ' '.join(com)
-    os.system(com)
+    ret = os.system(com)
+    print("------------")
+    print(ret)
+    print("------------")
+
 
 
 download("https://www.bilibili.com/video/BV1et411t7Cm", False, 10)
