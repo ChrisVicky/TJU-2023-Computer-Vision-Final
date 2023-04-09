@@ -74,7 +74,7 @@ def imgs2flo(datas: []):
 
 
 def Video2flo(url: str, vid: int, video: str = Video):
-    cap = cv2.VideoCapture(Video)
+    cap = cv2.VideoCapture(video)
     assert cap.isOpened()
     # fps = cap.get(cv2.CAP_PROP_FPS)
     # length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
