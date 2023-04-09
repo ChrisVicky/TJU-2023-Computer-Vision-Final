@@ -6,7 +6,7 @@ import os
 url = "https://www.bilibili.com/video/BV1et411t7Cm"
 Path = "./download"
 check_path(Path)
-title = "测试.mp4"
+title = "test.mp4"
 title = os.path.join(Path, title)
 download(url, False, 10, name=title)
 print("New file: ", title)
