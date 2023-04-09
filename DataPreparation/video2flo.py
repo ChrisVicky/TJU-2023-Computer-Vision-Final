@@ -18,6 +18,7 @@ Base = "./results"
 Mode = 5
 DN = 30  # How many frames for one dataset
 Model = init_model(Config, Checkpoint, Device)
+target = 512.0 # 512 x 512
 
 
 def check_path(p):
@@ -78,7 +79,17 @@ def imgs2flo(datas: []):
 
 
 def cropimg(img):
-    return cv2.resize(img, (512, 512))
+    global target
+    h = img.shape[0]
+    w = img.shape[1]
+    if h > w:
+        Size = (int(target), int(h*(target/w)))
+        img = cv2.resize(img, Size)
+    else:
+        Size = (int(w*(target/h)), int(target))
+        img = cv2.resize(img, Size)
+    img = img[0:int(target), 0:int(target)]
+    return img
 
 
 def Video2flo(url: str, vid: int, video: str = Video):
