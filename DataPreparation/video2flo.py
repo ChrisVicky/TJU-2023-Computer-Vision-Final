@@ -72,7 +72,8 @@ def imgs2flo(datas: []):
             p = os.path.join(base, "target")
             check_path(p)
             cv2.imwrite(os.path.join(p, f"{i:04d}.jpg"), img1)
-        cv2.imwrite(os.path.join(p, f"{i+1:04d}.jpg"), imgs[-1])
+            if i == len(imgs) - 2:
+                cv2.imwrite(os.path.join(p, f"{i+1:04d}.jpg"), img2)
 
 
 def Video2flo(url: str, vid: int, video: str = Video):
@@ -92,13 +93,13 @@ def Video2flo(url: str, vid: int, video: str = Video):
         if cnt % Mode == 0:
             imgs.append(img)
             cnt_i += 1
-        if cnt_i % DN == (DN - 1):
+        if cnt_i % DN == 0:
             data["video_id"] = str(vid)
             vid += 1
             data["imgs"] = imgs
             imgs = []
             data["source"] = url
-            data["start_frame"] = cnt_i - DN + 1
+            data["start_frame"] = (cnt_i - DN) * Mode
             datas.append(data)
             data = {}
         cnt += 1
