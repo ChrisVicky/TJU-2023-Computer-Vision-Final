@@ -2,12 +2,15 @@
 
 ## TODO LIST
 
+```Markdown
 * [] - Model Choosing
 * [] - Multi-Threads Downloader
 * [] - Data Formatting
 * [] - Training
 * [] - LaTeX Report
 * [] - Beamer Slides
+* ...
+```
 
 ## Log
 
