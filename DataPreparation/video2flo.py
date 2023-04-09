@@ -5,12 +5,13 @@ import os
 from tqdm import tqdm
 import numpy as np
 import json
+import torch
 
 
 #  mim download mmflow --config raft_8x2_100k_mixed_368x768 --dest ./checkpoints
 Config = "./checkpoints/raft_8x2_100k_mixed_368x768.py"
 Checkpoint = "./checkpoints/raft_8x2_100k_mixed_368x768.pth"
-Device = "cpu"
+Device = "cuda:0" if torch.cuda.is_available() else "cpu"
 Video = "./download/cxk.mp4"
 Base = "./results"
 Mode = 5
