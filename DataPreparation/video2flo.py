@@ -41,6 +41,7 @@ def imgs2flo(datas: []):
     global Model
     for data in datas:
         base = os.path.join(Base, data["video_id"])
+        check_path(base)
 
         imgs = data["imgs"]
         metadata = {
