@@ -12,8 +12,8 @@ def proxy_setup():
 
 
 def download(url: str, playlist: bool = False, threads: int = 10, proxy: bool = False, path: str = None, name: str = None):
-    global com
 
+    com = [Lux, "-c", Cookie]
     cmd = com
     if name:
         cmd.append('-O')

@@ -14,7 +14,8 @@ Config = "./checkpoints/raft_8x2_100k_mixed_368x768.py"
 Checkpoint = "./checkpoints/raft_8x2_100k_mixed_368x768.pth"
 Device = "cuda:0" if torch.cuda.is_available() else "cpu"
 Video = "./download/cxk.mp4"
-Base = "./results"
+# Base = "/root/autodl-tmp/TJU/DataPreparation/results"
+Base = "/root/autodl-fs/CV/results"
 Mode = 5
 DN = 30  # How many frames for one dataset
 Model = init_model(Config, Checkpoint, Device)
@@ -92,14 +93,17 @@ def cropimg(img):
     return img
 
 
-def Video2flo(url: str, vid: int, video: str = Video):
+def Video2flo(url: str, vid: int = None, video: str = Video):
     global Base
-    numbs = [int(i) for i in os.listdir(Base)]
-    vid = max(numbs) + 1
-    print(f"Current Video: {video}, started with {vid}")
+    check_path(Base)
+    if vid is None:
+        base_list = os.listdir(Base)
+        vid = len(base_list)
+    print(f"Current Video: {video}, started with {vid}, save to {Base}/{vid}")
     cap = cv2.VideoCapture(video)
     assert cap.isOpened()
-    # fps = cap.get(cv2.CAP_PROP_FPS)
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    mode = max(int(fps / 6), Mode)
     # length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     imgs = []
     datas = []
@@ -110,7 +114,7 @@ def Video2flo(url: str, vid: int, video: str = Video):
         flag, img = cap.read()
         if not flag:
             break
-        if cnt % Mode == 0:
+        if cnt % mode == 0:
             imgs.append(cropimg(img))
             cnt_i += 1
         if cnt_i % DN == 0 and len(imgs) > 0:
@@ -119,7 +123,7 @@ def Video2flo(url: str, vid: int, video: str = Video):
             data["imgs"] = imgs
             imgs = []
             data["source"] = url
-            data["start_frame"] = (cnt_i - DN) * Mode
+            data["start_frame"] = (cnt_i - DN) * mode 
             datas.append(data)
             data = {}
         cnt += 1
