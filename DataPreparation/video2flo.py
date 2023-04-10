@@ -95,11 +95,10 @@ def cropimg(img):
 
 def Video2flo(url: str, vid: int = None, video: str = Video):
     global Base
-    check_path(Base)
     if vid is None:
-        base_list = os.listdir(Base)
-        vid = len(base_list)
-    print(f"Current Video: {video}, started with {vid}, save to {Base}/{vid}")
+        numbs = [int(i) for i in os.listdir(Base)]
+        vid = max(numbs) + 1
+    print(f"Current Video: {video}, started with {vid}")
     cap = cv2.VideoCapture(video)
     assert cap.isOpened()
     fps = cap.get(cv2.CAP_PROP_FPS)
