@@ -1,5 +1,5 @@
 from downloader import download
-from video2flo import Video2flo, check_path
+from op_flow_generator import Video2flo, check_path
 import os
 
 
@@ -10,6 +10,7 @@ url = [
         # "https://www.bilibili.com/video/BV1i441187Vj",  # 藤原书记
         # "https://www.bilibili.com/video/BV1ct4y1n7t9"   # 蔡徐坤
         ]
+
 for u in url:
     title = u[u.rfind("/")+1:]
     download(u, False, 10, path=Path, name=title)
@@ -24,6 +25,7 @@ local = [
 #         "ndmz_1.mp4",     # 你的名字
         ]
 
+# Videos
 vid = 0
 while True:
     item = ""
@@ -41,3 +43,7 @@ while True:
             f.write(t+'\n')
     with open("donelist", "a") as f:
         f.write(item + "\n")
+
+# Gifs
+# TODO: 写 GIF 的生成
+

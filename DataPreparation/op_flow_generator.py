@@ -7,6 +7,8 @@ import numpy as np
 import json
 import torch
 from loguru import logger
+from PIL import Image, ImageSequence
+import numpy as np
 
 
 #  mim download mmflow --config raft_8x2_100k_mixed_368x768 --dest ./checkpoints
@@ -14,10 +16,10 @@ Config = "./checkpoints/raft_8x2_100k_mixed_368x768.py"
 Checkpoint = "./checkpoints/raft_8x2_100k_mixed_368x768.pth"
 Device = "cuda:0" if torch.cuda.is_available() else "cpu"
 Video = "./download/cxk.mp4"
-# Base = "/root/autodl-tmp/TJU/DataPreparation/results"
+Gif = "./download/test.gif"
 Base = "/root/autodl-fs/CV/results"
 Mode = 5
-DN = 30  # How many frames for one dataset
+DN = 2 # How many frames for one dataset
 Model = init_model(Config, Checkpoint, Device)
 target = 512.0 # 512 x 512
 
@@ -42,6 +44,18 @@ def flow2rgb2(flow: np.ndarray) -> np.ndarray:
 
 
 def imgs2flo(datas: []):
+    """
+
+    Args:
+        datas: [
+            data = {
+            "imgs": [],
+            "video_id": "",
+            "source" : "",
+            "start_frame": "",
+            }
+        ]
+    """
     global Model
     for data in tqdm(datas):
         base = os.path.join(Base, data["video_id"])
@@ -113,20 +127,68 @@ def Video2flo(url: str, vid: int = None, video: str = Video):
         flag, img = cap.read()
         if not flag:
             break
-        if cnt % mode == 0:
-            imgs.append(cropimg(img))
-            cnt_i += 1
-        if cnt_i % DN == 0 and len(imgs) > 0:
+        # Store the [0] and [fps] figures
+        if cnt == 0:
+            imgs.append(img)
+        if cnt == fps:
+            imgs.append(img)
+        # Choose Images 2 minutes later
+        if cnt == fps * 60 * 2:
             data["video_id"] = str(vid)
             vid += 1
             data["imgs"] = imgs
             imgs = []
             data["source"] = url
-            data["start_frame"] = (cnt_i - DN) * mode 
+            data["start_frame"] = cnt_i * fps * 60 * 2
             datas.append(data)
             data = {}
+            cnt_i += 1
+            cnt = 0
         cnt += 1
     cap.release()
 
+    if len(imgs) == 2:
+        data["video_id"] = str(vid)
+        vid += 1
+        data["imgs"] = imgs
+        imgs = []
+        data["source"] = url
+        data["start_frame"] = cnt_i * fps * 60 * 2
+        datas.append(data)
+        data = {}
+        cnt_i += 1
+        cnt = 0
     imgs2flo(datas)
     return vid
+
+
+def Gif2flo(url: str, vid: int = None, gif: str = Gif):
+    global Base
+    if vid is None:
+        numbs = [int(i) for i in os.listdir(Base)]
+        vid = max(numbs) + 1
+    print(f"Current Gif: {gif}, started with {vid}")
+    _gif = Image.open(gif)
+    i = 0
+    imgs = []
+    datas = []
+    data = {}
+    img_list = []
+    for frame in ImageSequence.Iterator(_gif):
+        frame = frame.convert('RGB')
+        cv_img = np.array(frame, dtype=np.uint8)
+        cv_img = cv2.cvtColor(cv_img, cv2.COLOR_RGBA2BGRA)
+        img_list.append(cropimg(cv_img))
+
+    imgs.append(img_list[0])
+    imgs.append(img_list[-1])
+    data["video_id"] = str(vid)
+    vid += 1
+    data["imgs"] = imgs
+    data["start_frame"] = 0
+    data["source"] = url
+    datas.append(data)
+    imgs2flo(datas)
+    return vid
+
+Gif2flo("test", 12)
