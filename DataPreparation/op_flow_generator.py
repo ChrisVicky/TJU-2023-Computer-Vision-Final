@@ -17,7 +17,8 @@ Checkpoint = "./checkpoints/raft_8x2_100k_mixed_368x768.pth"
 Device = "cuda:0" if torch.cuda.is_available() else "cpu"
 Video = "./download/cxk.mp4"
 Gif = "./download/test.gif"
-Base = "/root/autodl-fs/CV/results"
+# Base = "/root/autodl-fs/CV/results"
+Base = "/root/autodl-fs/CV/4300"
 Mode = 5
 DN = 2 # How many frames for one dataset
 Model = init_model(Config, Checkpoint, Device)
@@ -43,54 +44,19 @@ def flow2rgb2(flow: np.ndarray) -> np.ndarray:
     return cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
 
 
-def imgs2flo(datas: []):
-    """
-
-    Args:
-        datas: [
-            data = {
-            "imgs": [],
-            "video_id": "",
-            "source" : "",
-            "start_frame": "",
-            }
-        ]
-    """
+def imgs2flo(imgs: [], source: str):
     global Model
-    for data in tqdm(datas):
-        base = os.path.join(Base, data["video_id"])
-        check_path(base)
-
-        imgs = data["imgs"]
-        metadata = {
-                "video_id":     data["video_id"],
-                "source":       data["source"],
-                "start_frame":  data["start_frame"],
-                "dynamic":      "0",
-                }
-        json_str = json.dumps(metadata, indent=4)
-        with open(os.path.join(base, "metadata.json"), 'w') as json_file:
-            json_file.write(json_str)
-
-        for i in tqdm(range(len(imgs) - 1)):
-            img1 = imgs[i]
-            img2 = imgs[i+1]
-
-            result = inference_model(Model, img1, img2)
-
-            p = os.path.join(base, "flow_rgb")
-            check_path(p)
-            cv2.imwrite(os.path.join(p, f"{i}.jpg"), flow2rgb2(result))
-
-            p = os.path.join(base, "flow")
-            check_path(p)
-            write_flow(result, os.path.join(p, f"{i}.flo"))
-
-            p = os.path.join(base, "target")
-            check_path(p)
-            cv2.imwrite(os.path.join(p, f"{i}.jpg"), img1)
-            if i == len(imgs) - 2:
-                cv2.imwrite(os.path.join(p, f"{i+1}.jpg"), img2)
+    base = os.path.join(Base, source)
+    result = inference_model(Model, imgs[0], imgs[1])
+    cv2.imwrite(os.path.join(base, f"flow.jpg"), flow2rgb2(result))
+    metadata = {
+        "source": source,
+        "min": np.min(result),
+        "max": np.max(result),
+    }
+    json_str = json.dumps(metadata, indent=4)
+    with open(os.path.join(base, "metadata.json"), 'w') as json_file:
+        json_file.write(json_str)
 
 
 def cropimg(img):
