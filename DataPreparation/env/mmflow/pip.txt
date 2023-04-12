@@ -1,0 +1,67 @@
+addict==2.4.0
+brotlipy==0.7.0
+certifi @ file:///croot/certifi_1671487769961/work/certifi
+cffi @ file:///croot/cffi_1670423208954/work
+charset-normalizer @ file:///tmp/build/80754af9/charset-normalizer_1630003229654/work
+click==8.1.3
+colorama==0.4.5
+contourpy==1.0.6
+cryptography @ file:///croot/cryptography_1677533068310/work
+cycler==0.11.0
+filelock @ file:///croot/filelock_1672387128942/work
+flit_core @ file:///croot/flit-core_1679397103445/work/source/flit_core
+fonttools==4.37.1
+gmpy2 @ file:///tmp/build/80754af9/gmpy2_1645455532332/work
+idna @ file:///croot/idna_1666125576474/work
+importlib-metadata==5.1.0
+importlib-resources==5.12.0
+Jinja2 @ file:///croot/jinja2_1666908132255/work
+kiwisolver==1.4.4
+loguru==0.6.0
+Markdown==3.4.1
+markdown-it-py==2.2.0
+MarkupSafe @ file:///opt/conda/conda-bld/markupsafe_1654597864307/work
+matplotlib==3.7.0
+mdurl==0.1.1
+mkl-fft==1.3.1
+mkl-random @ file:///tmp/build/80754af9/mkl_random_1626186064646/work
+mkl-service==2.4.0
+mmcv-full==1.7.1
+mmengine==0.7.0
+mmflow @ file:///root/autodl-tmp/mmflow
+model-index==0.1.11
+mpmath==1.2.1
+networkx @ file:///croot/networkx_1678964333703/work
+numpy @ file:///croot/numpy_and_numpy_base_1672336185480/work
+nvidia-cublas-cu11==11.10.3.66
+nvidia-cuda-nvrtc-cu11==11.7.99
+nvidia-cuda-runtime-cu11==11.7.99
+nvidia-cudnn-cu11==8.5.0.96
+opencv-python==4.6.0.66
+openmim==0.3.6
+ordered-set==4.1.0
+packaging==23.0
+pandas==1.5.2
+Pillow==9.4.0
+pycparser @ file:///tmp/build/80754af9/pycparser_1636541352034/work
+Pygments==2.14.0
+pyOpenSSL @ file:///croot/pyopenssl_1677607685877/work
+pyparsing==3.0.9
+PySocks @ file:///tmp/build/80754af9/pysocks_1605305779399/work
+python-dateutil==2.8.2
+pytz==2022.6
+PyYAML==6.0
+requests @ file:///croot/requests_1678709721434/work
+rich==13.3.1
+six @ file:///tmp/build/80754af9/six_1644875935023/work
+sympy @ file:///croot/sympy_1668202399572/work
+tabulate==0.8.10
+termcolor==2.1.1
+torch==1.13.0
+torchaudio==0.13.0
+torchvision==0.14.0
+tqdm==4.63.1
+typing_extensions @ file:///croot/typing_extensions_1669924550328/work
+urllib3 @ file:///croot/urllib3_1680254681959/work
+yapf==0.32.0
+zipp==3.15.0
