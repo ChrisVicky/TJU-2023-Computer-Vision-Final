@@ -1,53 +1,61 @@
+# Data Preparation
 
-## File Structure
+* To collect enough data for the training process of Control Net, we have initially two options. First is to download videos and extract continuous frames including the movements of gestures. Second is to download massive GIFs from [Giphy](https://giphy.com/) and frames are extracted accordingly.
+* Implementations on both choices are finished on time and archived here. 
+* Essentially, because we require large diversity in datasets therefore we take only 2 frames every 2 minutes in a video which ends up wasting streams, we take GIFs as the final decision.
+* Yet, still we keep the Video manipulation methods Archived here for future use.
 
-```markdown
-.
-├── lux                     : [Forked lux](https://github.com/ChrisVicky/lux), compiled to Arch Linux Platform
-├── main.py                 : Downloader that wrap `lux` with options
-├── README.md           
-├── video2gif.py            : Clip downlaed videos to gifs
-└── videos                  : directiory for storing
-3 directories, 33 files
+## File Structures
+
 ```
-## Video Downloader
+.
+├── coca_annotator.py          : [GIFs] - [CLIP] - prompt generator
+├── get_random.py              : [GIFs] - [APIs] - Random
+├── get_trending.py            : [GIFs] - [APIs] - Trending
+├── img2flow.py                : [GIFs] - [RAFT] - Optical Flow Extractor for images
+├── gif2figure.py              : [GIFs] - GIF to Image
+├── gif_downloader.py          : [GIFs] - Multi-Threads-GIF-Downloader
+├── integrity_verification.py  : [GIFs] - Dataset Validator
+├── proxy_pool.py              : [GIFs] - Proxy Issues
+├── redis2file.py              : [GIFs] - Store Redis to Json
+├── Redis.py                   : [GIFs] - Redis Usage
+├── README.md
+├── lux                        : [Videos] - [downloader](https://github.com/ChrisVicky/lux)
+├── op_flow_generator.py       : [Videos] - [RAFT] Optical Flow Extractors
+├── main.py                    : [Videos] - Video Control
+├── video2gif.py               : [Videos] - Transform Videos to GIFs
+└── video_downloader.py        : [Videos] - Videos Downloading Control
 
-* Download Video from Various Video Sources
+3 directories, 24 files
+```
+
+## Videos Manipulation
+
+* [lux](https://github.com/ChrisVicky/lux) is a video downloader for multiple platforms.
 
 ### Usage
 1. Copy your cookies in file `cookies` stored in the current directory
 2. RUN `python download.py` to start downloading
 
-## Data Preparation
+## GIFs Manipulation
 
-### ~~CPU Platform~~
-<!-- * Fxxk `mm` Project. -->
+1. Download massive GIFs from [`Giphy`](https://giphy.com/).
+2. Since `giphy` provides APIs for querying trending GIFs and other stuff at its [Developer Page](https://developers.giphy.com/), it is better to collect GIFs via APIs rather than Crawling its home page.
+3. The return items of the APIs contain `Image Item` providing the URL of the GIF. Therefore, we decide to develop the system in the following way:
 
-* !! `mmflow` cannot run on CPU platform because there is no compatible versions of mmcv that support both CPU Platform and mmflow module. They are in conflict when it comes to Platform with only CPU - Torch.
+```markdown
+┌──────────────────┐ ┌──────────────────────┐ ┌─────────────────┐   Check IMG sizes
+│  URL COLLECTORS  │┌►     DOWNLOADERS      │┌►    (FIGUREs)    │ ◄────────────────┐
+│┌──────┐┌────────┐│││┌────────────────────┐││└─┬─────────────┬─┘                  │
+││Random││Trending│││││[concurrent.futures]│││  │   [RAFT]    │                    │┌─────────────┐
+│└─┬────┘└──────┬─┘│││└─┬─┬─┬──────────────┘││┌─│─────────────│─┐   Check .flo     ││             │
+│  │  [APIs]    │  │││  │ │ │ ... n threads │││ ▼(.jpg + .flo)▼ │ ◄────────────────┼┤  VALIDATOR  │
+└──│────────────│──┘│└──│─│─│───────────────┘│└─┬─────────────┬─┘                  ││             │
+┌──│────────────│──┐│   │ │ │       [GIF2FIG]│  │   [CLIP]    │                    │└─────────────┘
+│  ▼   REDIS    ▼  ├┘┌──│─│─│───────────────┐│┌─▼─────────────▼─┐   Check Prompt   │
+│    (hash:url)    │ │  ▼ ▼ ▼ (GIFs)        ├┘│ (.jpg+.flo+text)│ ◄────────────────┘
+└──────────────────┘ └──────────────────────┘ └─────────┬───────┘   
+                                                        ▼
+                                    [(0.jpg, 1.jpg, flow.jpg, metadata.json), ...]
 
-<center>
-<img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);"
-src="img/image_2023-04-09-16-14-14.png"><br>
-<div style="color:orange; border-bottom: 1px solid #d9d9d9;display: inline-block;color: #999;padding: 2px;">The only Supported Version of MMCV is 2.0.0 [1]</div>
-</center>
-<center>
-<img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);"
-src="img/image_2023-04-09-16-16-33.png"><br>
-<div style="color:orange; border-bottom: 1px solid #d9d9d9;display: inline-block;color: #999;padding: 2px;">Runtime Error [2]</div>
-</center>
-
-
-> * [1] : https://mmcv.readthedocs.io/en/latest/get_started/installation.html#install-mmcv-full
-> * [2] : Error Occurs when running under such a Configuration
-
-
-### CUDA
-
-* When it comes to `CUDA` style of Torch, it works with the following configurations.
-
-<center>
-    <img style="border-radius: 0.3125em;box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);"
-        src="img/image_2023-04-09-16-19-48.png"><br>
-    <div style="color:orange; border-bottom: 1px solid #d9d9d9;display: inline-block;color: #999;padding: 2px;">compatible configuration</div>
-</center>
-
+```
