@@ -1,3 +1,6 @@
 [submodule "sd-webui-flowvid"]
 	path = sd-webui-flowvid
 	url = ./sd-webui-flowvid
+[submodule "ControlNet"]
+	path = ControlNet
+	url = ./ControlNet
