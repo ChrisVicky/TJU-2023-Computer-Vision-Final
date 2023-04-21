@@ -1,0 +1,3 @@
+[submodule "sd-webui-flowvid"]
+	path = sd-webui-flowvid
+	url = ./sd-webui-flowvid
